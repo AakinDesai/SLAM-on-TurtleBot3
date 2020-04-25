@@ -48,7 +48,7 @@
          xb = A * xb + B * u;
          P = A * P * A.transpose() + Q;
          K = P * H.transpose() * (H * P * H.transpose() + R).inverse();
-         Z << (xb(0,0) + distribution(generator));
+         Z << (u(0,0)*it*dt) + distribution(generator);
          xb = xb + K * (Z - (H * xb));
          P = (I - (K * H)) * P;
          std::cout << xb << std::endl;
