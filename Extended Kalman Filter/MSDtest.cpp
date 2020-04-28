@@ -46,23 +46,24 @@ int main() {
 
     for (it; it < 500; it++) {
 
-        xb << rand() % 100,0;
-        float xid = 0;
+        xb << rand() % 100, 0;
+        float xid = 0,xidv;
         float xi = xb(0, 0);
         int i = 1;
         for (i; i <= 50; i++) {
 
-            xid = xid - (((b * xid + k * xi) / ma) * dt);
+            xidv = xid - (((b * xid + k * xi) / ma) * dt);
             xi = xi + (dt * xid);
-            actual[i-1] = xi;
-            mess[i - 1] = actual[i-1] + distribution(generator);
+            xid = xidv;
+            actual[i - 1] = xi;
+            mess[i - 1] = actual[i - 1] + distribution(generator);
         }
-        
+
         kalmanfilter kf(dt, A, B, Q, H, R);
         kf.init(xb, u, P);
         xb = kf.update(mess);
         error = xb(0, 0) - actual[49];
-        myfile <<error<< "\n";
+        myfile << error << "\n";
     }
     return 0;
 }
