@@ -8,6 +8,8 @@ Panels:
         - /RobotModel1
         - /Odometry1
         - /MarkerArray1
+        - /Marker1
+        - /Marker2
       Splitter Ratio: 0.6029411554336548
     Tree Height: 728
   - Class: rviz/Selection
@@ -168,7 +170,15 @@ Visualization Manager:
       Value: true
     - Class: rviz/Marker
       Enabled: true
-      Marker Topic: visualization_marker
+      Marker Topic: ekf
+      Name: Marker
+      Namespaces:
+        "": true
+      Queue Size: 100
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: wheelreading
       Name: Marker
       Namespaces:
         "": true
