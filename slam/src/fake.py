@@ -6,10 +6,10 @@ import tf
 import geometry_msgs.msg
 import tf2_ros
 from gazebo_msgs.msg import ModelStates
-from geometry_msgs.msg import Pose,Twist
+from geometry_msgs.msg import Pose,Twist,PoseStamped
 from slam.msg import landmark
 from tf.transformations import euler_from_quaternion, quaternion_from_euler
-from nav_msgs.msg import Odometry
+from nav_msgs.msg import Odometry,Path
 from sensor_msgs.msg import JointState
 import roslib
 from visualization_msgs.msg import Marker
@@ -21,9 +21,12 @@ obstacle = "landmarks"
 
 land_publish = rospy.Publisher('landmark_data',landmark, queue_size=0)
 od_publish = rospy.Publisher('odom1',Odometry, queue_size=0)
-joint_publish =rospy.Publisher('joint_states1', JointState, queue_size=10)
+joint_publish =rospy.Publisher('joint_states', JointState, queue_size=10)
 marker_publish = rospy.Publisher('visualization_marker_array', MarkerArray,queue_size=10)
-
+path_publish = rospy.Publisher('/path', Path, queue_size=10)
+m_publish = rospy.Publisher('ekf', Marker,queue_size=10)
+m1_publish = rospy.Publisher('wheelreading', Marker,queue_size=10)
+path = Path()
 
 def processmodel(st,lv,av):
     
@@ -34,6 +37,16 @@ def processmodel(st,lv,av):
     sd[2] = av
     st = st + (dt*sd)
     return st 
+
+def odometryreading(po,lv,av):
+
+    global dt
+    sd = np.zeros(3)
+    sd[0] = np.cos(po[2])*lv
+    sd[1] = np.sin(po[2])*lv
+    sd[2] = av
+    po = po + (dt*sd)
+    return po 
 
 def observationmodel(st):
     
@@ -87,7 +100,7 @@ def callback2(msg):
             
 def callback(model):
 
-    global u1,u2
+    global u1,u2,path
     real = np.zeros(9)
     tb = model.name.index(robot)
     tb_pose = model.pose[tb]
@@ -111,7 +124,7 @@ def callback(model):
 
     real[2] = yaw
  
-    global state,P,wl,wr,last,dt,odox,odoy,odot
+    global state,P,wl,wr,last,dt,odox,odoy,odot,wlr
     i = 3
  
     markerArray = MarkerArray()
@@ -137,32 +150,50 @@ def callback(model):
             real[i] = model.pose[k].position.x
             marker.pose.position.x = model.pose[k].position.x
             i = i+1
-	    state[i] = model.pose[k].position.y
-	    real[i] = model.pose[k].position.y
+            state[i] = model.pose[k].position.y
+            real[i] = model.pose[k].position.y
             marker.pose.position.y = model.pose[k].position.y
             marker.id = m
             m = m + 1 
             i = i+1
             markerArray.markers.append(marker)
             marker_publish.publish(markerArray)
+   
+    
 
-
-    now = rospy.get_rostime()
-    dt = (now.nsecs - last.nsecs) * (10 ** -9)
+    now = rospy.get_time()
+    dt = now-last
     state , P = timeupdate(state,P,u1,u2)
-    last =   rospy.get_rostime()
+    last =   rospy.get_time()
     observation = observationmodel(real)
     state , P = measurementupdate(P,state,observation)
     error = state-real
+    wlr = odometryreading(wlr,u1,u2)
+    
+    marker.color.r = 1.0
+    marker.color.g = 0.0
+    marker.color.b = 0.0
+    marker.pose.position.x = state[0]
+    marker.pose.position.y = state[1]
+    odomq = quaternion_from_euler(0,0,state[2])
+    marker.pose.orientation.x = odomq[0]
+    marker.pose.orientation.y = odomq[1]
+    marker.pose.orientation.z = odomq[2]
+    marker.pose.orientation.w = odomq[3]
+    m_publish.publish(marker)
 
-    vx = np.cos(odot)*u1
-    vy = np.sin(odot)*u1
-    wz = u2
-    odox = odox + (dt*vx)
-    odoy = odoy + (dt*vy)
-    odot = odot + (dt*wz)
-    oq = quaternion_from_euler(0,0,odot)
-  
+    marker.color.r = 0.0
+    marker.color.g = 1.0
+    marker.color.b = 0.0
+    marker.pose.position.x = wlr[0]
+    marker.pose.position.y = wlr[1]
+    odomq = quaternion_from_euler(0,0,wlr[2])
+    marker.pose.orientation.x = odomq[0]
+    marker.pose.orientation.y = odomq[1]
+    marker.pose.orientation.z = odomq[2]
+    marker.pose.orientation.w = odomq[3]
+    m1_publish.publish(marker)
+
     pub = landmark()
     pub.s = error
     
@@ -173,32 +204,31 @@ def callback(model):
     odom_.child_frame_id = "base_footprint"
     odom_.pose.pose.position.x = state[0]
     odom_.pose.pose.position.y = state[1]
-    odom_.pose.pose.position.z = 0;
+    odom_.pose.pose.position.z = 0
 
-    odomq = quaternion_from_euler(0,0,state[2])
+    odomq = quaternion_from_euler(0,0,0)
     odom_.pose.pose.orientation.x = odomq[0]
     odom_.pose.pose.orientation.y = odomq[1]
     odom_.pose.pose.orientation.z = odomq[2]
     odom_.pose.pose.orientation.w = odomq[3]
 
-    odom_.twist.twist.linear.x  = u1;
-    odom_.twist.twist.angular.z = u2;
+    odom_.twist.twist.linear.x  = u1
+    odom_.twist.twist.angular.z = u2
 
     od_publish.publish(odom_)
 	
     a = (u1*dt*2)/(0.033)
     b = (u2*dt*0.160)/(0.033)
-
     r = (a+b)/(2)
     l = (a-b)/(2)
     wl = wl + l
     wr = wr + r
 
     js = JointState()
-    js.header.frame_id = "base_footprint"
+    js.header.frame_id = ''
     js.header.stamp = now;
-    js.name = ['wheel_left_link' , 'wheel_right_l']
-    js.position= [wl,wr]
+    js.name = ['wheel_right_joint' , 'wheel_left_joint']
+    js.position= [wr,wl]
     
     joint_publish.publish(js)
 
@@ -212,9 +242,25 @@ def callback(model):
     odom_tf.transform.rotation = odom_.pose.pose.orientation;
     br = tf2_ros.TransformBroadcaster()
     br.sendTransform(odom_tf)
-  
+    
+    
+    path.header.frame_id = "odom" 
+
+    poses = PoseStamped()
+    poses.header.frame_id = "odom" 
+    poses.pose.position.x = state[0]
+    poses.pose.position.y = state[1]
+    poses.pose.position.z = 0
+    poses.pose.orientation.x = odomq[0]
+    poses.pose.orientation.y = odomq[1]
+    poses.pose.orientation.z = odomq[2]
+    poses.pose.orientation.w = odomq[3]
+    path.poses.append(poses)
+    path_publish.publish(path)
+   
 
 state = np.zeros(9)
+wlr = np.zeros(3)
 odox = 0
 odoy = 0
 odot = 0
@@ -228,9 +274,9 @@ wl = 0
 wr = 0
 u1 = 0
 u2 = 0
-dt = 0
+dt = 1.0/120.0
 rospy.init_node('fake')
-last =   rospy.get_rostime()
+rate = rospy.Rate(30)
+last =   rospy.get_time()
 rospy.Subscriber('/gazebo/model_states',ModelStates,callback)
 rospy.spin()
-
