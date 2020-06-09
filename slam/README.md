@@ -57,4 +57,4 @@ Update the error covariance
 Loop over the above updates for every time step.
 
 EKF Slam with Gazebo landmarks
-![gzbslam](media/visual.mkv)
+![gzbslam](media/path.png)
