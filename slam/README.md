@@ -55,3 +55,6 @@ Update the error covariance
 <img src="https://render.githubusercontent.com/render/math?math=P_k = (1 - K_k H_k)P_k^-">
 
 Loop over the above updates for every time step.
+
+EKF Slam with Gazebo landmarks
+![gzbslam](media/visual.mkv)
