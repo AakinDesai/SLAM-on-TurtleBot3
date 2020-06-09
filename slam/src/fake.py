@@ -23,10 +23,14 @@ land_publish = rospy.Publisher('landmark_data',landmark, queue_size=0)
 od_publish = rospy.Publisher('odom1',Odometry, queue_size=0)
 joint_publish =rospy.Publisher('joint_states', JointState, queue_size=10)
 marker_publish = rospy.Publisher('visualization_marker_array', MarkerArray,queue_size=10)
-path_publish = rospy.Publisher('/path', Path, queue_size=10)
+path_publish = rospy.Publisher('/pathe', Path, queue_size=10)
+path1_publish = rospy.Publisher('/pathr', Path, queue_size=10)
+path2_publish = rospy.Publisher('/pathw', Path, queue_size=10)
 m_publish = rospy.Publisher('ekf', Marker,queue_size=10)
 m1_publish = rospy.Publisher('wheelreading', Marker,queue_size=10)
-path = Path()
+pathe = Path()
+pathr = Path()
+pathw = Path()
 
 def processmodel(st,lv,av):
 
@@ -269,9 +273,9 @@ def callback(model):
     br = tf2_ros.TransformBroadcaster()
     br.sendTransform(odom_tf)
     
-    # Path of Robot according to EKF
+    # Path of Robot according to EKF, Robot, Odometry
     
-    path.header.frame_id = "odom" 
+    pathe.header.frame_id = "odom" 
 
     poses = PoseStamped()
     poses.header.frame_id = "odom" 
@@ -282,8 +286,39 @@ def callback(model):
     poses.pose.orientation.y = odomq[1]
     poses.pose.orientation.z = odomq[2]
     poses.pose.orientation.w = odomq[3]
-    path.poses.append(poses)
-    path_publish.publish(path)
+    pathe.poses.append(poses)
+    path_publish.publish(pathe)
+
+
+    pathr.header.frame_id = "odom" 
+
+    poses = PoseStamped()
+    poses.header.frame_id = "odom" 
+    poses.pose.position.x = real[0]
+    poses.pose.position.y = real[1]
+    poses.pose.position.z = 0
+    odomq = quaternion_from_euler(0,0,yaw)
+    poses.pose.orientation.x = odomq[0]
+    poses.pose.orientation.y = odomq[1]
+    poses.pose.orientation.z = odomq[2]
+    poses.pose.orientation.w = odomq[3]
+    pathr.poses.append(poses)
+    path1_publish.publish(pathr)
+
+    pathw.header.frame_id = "odom" 
+
+    poses = PoseStamped()
+    poses.header.frame_id = "odom" 
+    poses.pose.position.x = wlr[0]
+    poses.pose.position.y = wlr[1]
+    poses.pose.position.z = 0
+    odomq = quaternion_from_euler(0,0,wlr[2])
+    poses.pose.orientation.x = odomq[0]
+    poses.pose.orientation.y = odomq[1]
+    poses.pose.orientation.z = odomq[2]
+    poses.pose.orientation.w = odomq[3]
+    pathw.poses.append(poses)
+    path2_publish.publish(pathw)
    
 
 state = np.zeros(9)
