@@ -15,4 +15,4 @@ In the process of observing a landmark, the following kinematics is used to pred
 
 <img src="https://render.githubusercontent.com/render/math?math=\dot{x} = Vcos(\phi), \dot{y} = Vsin(\phi), \dot{\phi} = \frac{Vtan(\gamma)}{L}">
 
-<img src="https://render.githubusercontent.com/render/math?math=\left[\begin{array}{c} x(k%2B1) \\ y(k%2B1) \\ \phi(k%2B1) \end{array} \right]=">  <img src="https://render.githubusercontent.com/render/math?math=\left[\begin{array}{c} x(k)%2B\DeltaTV(k)cos(\phi) \\ y(k)%2B\DeltaTV(k)sin(\phi) \\ \phi(k)%2B \frac{\DeltaTV(k)tan(\gamma)}{L} \end{array} \right]">
+<img src="https://render.githubusercontent.com/render/math?math=\left[\begin{array}{c} x(k%2B1) \\ y(k%2B1) \\ \phi(k%2B1) \end{array} \right]=">  <img src="https://render.githubusercontent.com/render/math?math=\left[\begin{array}{c} x(k)%2B \Delta TV(k)cos(\phi) \\ y(k)%2B \Delta TV(k)sin(\phi) \\ \phi(k)%2B \frac{\Delta TV(k)tan(\gamma)}{L} \end{array} \right]">
