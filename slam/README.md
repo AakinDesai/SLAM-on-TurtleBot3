@@ -36,7 +36,7 @@ Time update:
 
 Measurement update:
 
-<img src="https://render.githubusercontent.com/render/math?math=K_k = P_k^- H_k^T (H_k P_k^- H_k^T %2B V_k R_k V_k^T)^-1">
+<img src="https://render.githubusercontent.com/render/math?math=K_k = P_k^- H_k^T (H_k P_k^- H_k^T %2B V_k R_k V_k^T)^{-1}">
 
 <img src="https://render.githubusercontent.com/render/math?math=\hat{x_k} = \hat{x_h^-} %2B K_k(z_k - h(\hat{x_k^-},0))">
 
