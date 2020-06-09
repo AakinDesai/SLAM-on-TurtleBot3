@@ -32,7 +32,7 @@ Time update:
 
 <img src="https://render.githubusercontent.com/render/math?math=\hat{x_k^-} = f(\hat{x_{k-1}^-},u_k-1,0)">
 
-<img src="https://render.githubusercontent.com/render/math?math=P_k^- = A_k P_{k-1} A_k^T %2B W_k Q_{K-1} W_k^T">
+<img src="https://render.githubusercontent.com/render/math?math=P_k^- = A_k P_{k-1} A_k^T %2B W_k Q_{k-1} W_k^T">
 
 Measurement update:
 
