@@ -58,3 +58,6 @@ Loop over the above updates for every time step.
 
 EKF Slam with Gazebo landmarks
 ![gzbslam](media/path.png)
+Green block - Odometry with black path
+Red block - EKF Slam with green path
+Robot - Turtlebot3 gazebo path in red
