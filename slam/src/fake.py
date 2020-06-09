@@ -29,6 +29,8 @@ m1_publish = rospy.Publisher('wheelreading', Marker,queue_size=10)
 path = Path()
 
 def processmodel(st,lv,av):
+
+    # Estimating state
     
     global dt
     sd = np.zeros(9)
@@ -39,7 +41,9 @@ def processmodel(st,lv,av):
     return st 
 
 def odometryreading(po,lv,av):
-
+     
+    # Fake Odometry reading
+    
     global dt
     sd = np.zeros(3)
     sd[0] = np.cos(po[2])*lv
@@ -50,14 +54,18 @@ def odometryreading(po,lv,av):
 
 def observationmodel(st):
     
+    # Fake Observation model
+    
     om = np.zeros(6)
     for i in range(3) :
-	om[2*i] = math.hypot(st[3 + 2*i]-st[0],st[4 + 2*i]-st[1])
+        om[2*i] = math.hypot(st[3 + 2*i]-st[0],st[4 + 2*i]-st[1])
         om[2*i + 1] = math.atan2(st[4 + 2*i]-st[1],st[3 + 2*i]-st[0])
     return om
     
 def timeupdate(st,cp,lv,av):
-
+    
+    # Time update equation of EKF
+    
     global Q,dt
     A = np.identity(9)
     A[0][2] = dt * -np.sin(st[2])*lv
@@ -68,6 +76,8 @@ def timeupdate(st,cp,lv,av):
 
 def measurementupdate(cp,st,ob):
 	
+    # Update state on the basis of observation
+    
     global R
     H = np.zeros((6,9))
     for i in range(3):
@@ -92,6 +102,8 @@ def measurementupdate(cp,st,ob):
 
 def callback2(msg):
     
+    # Command Velocity
+    
     global u1,u2
   
     u1 = msg.linear.x
@@ -101,6 +113,9 @@ def callback2(msg):
 def callback(model):
 
     global u1,u2,path
+    
+    # Real states of Robot and Landmark for observation model and error calculation
+    
     real = np.zeros(9)
     tb = model.name.index(robot)
     tb_pose = model.pose[tb]
@@ -127,6 +142,8 @@ def callback(model):
     global state,P,wl,wr,last,dt,odox,odoy,odot,wlr
     i = 3
  
+    # Marker for Landmarks
+    
     markerArray = MarkerArray()
     marker = Marker()
     marker.header.frame_id = "odom"
@@ -159,8 +176,8 @@ def callback(model):
             markerArray.markers.append(marker)
             marker_publish.publish(markerArray)
    
+    # EKF implementaion 
     
-
     now = rospy.get_time()
     dt = now-last
     state , P = timeupdate(state,P,u1,u2)
@@ -169,6 +186,8 @@ def callback(model):
     state , P = measurementupdate(P,state,observation)
     error = state-real
     wlr = odometryreading(wlr,u1,u2)
+    
+    # Marker for Robot position according to EKF and Odometry
     
     marker.color.r = 1.0
     marker.color.g = 0.0
@@ -194,10 +213,14 @@ def callback(model):
     marker.pose.orientation.w = odomq[3]
     m1_publish.publish(marker)
 
+    # Publishing Error to landmark_data message
+    
     pub = landmark()
     pub.s = error
     
     land_publish.publish(pub)
+    
+    # Publishing Odometry
     
     odom_ = Odometry()
     odom_.header.frame_id = "odom"
@@ -217,6 +240,8 @@ def callback(model):
 
     od_publish.publish(odom_)
 	
+    # Publishing JOint_states
+    
     a = (u1*dt*2)/(0.033)
     b = (u2*dt*0.160)/(0.033)
     r = (a+b)/(2)
@@ -232,7 +257,8 @@ def callback(model):
     
     joint_publish.publish(js)
 
-	
+	# Transformation
+    
     odom_tf = geometry_msgs.msg.TransformStamped()
     odom_tf.header = odom_.header;
     odom_tf.child_frame_id = odom_.child_frame_id;
@@ -243,6 +269,7 @@ def callback(model):
     br = tf2_ros.TransformBroadcaster()
     br.sendTransform(odom_tf)
     
+    # Path of Robot according to EKF
     
     path.header.frame_id = "odom" 
 
