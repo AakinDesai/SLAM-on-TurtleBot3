@@ -13,4 +13,4 @@ For EKF SLAM, refer to [this SLAM resource](https://ieeexplore.ieee.org/document
 The process model:
 In the process of observing a landmark, the following kinematics is used to predict the vehicle state.
 
-$\dot{x} = Vcos(phi)$
+<img src="https://render.githubusercontent.com/render/math?math=\dot{x} = Vcos(\phi)">
