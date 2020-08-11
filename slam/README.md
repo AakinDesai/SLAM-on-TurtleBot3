@@ -6,7 +6,11 @@ Authors: Aakin Desai and Nithin Gunamgari
 
 This incorporates different slam techniques on turtlebot3.
 
-* EKF slam from scratch * RTABMAP with 2D LiDAR scanner * Frontier Exploration with 2D LiDAR scanner.
+* EKF slam from scratch
+
+* RTABMAP with 2D LiDAR scanner
+
+* Frontier Exploration with 2D LiDAR scanner.
 
 ### EKF SLAM
 
@@ -66,3 +70,12 @@ Green block - Odometry with black path
 Red block - EKF Slam with green path
 
 Robot - Turtlebot3 gazebo path in red
+
+To run this, clone this repository (make sure you have all the turtlebot dependecies installed). 
+
+Launch the following files in order
+
+- `roslaunch turtlebot3_gazebo turtlebot3_world.launch`
+
+- `roslaunch slam slam.launch`
+
