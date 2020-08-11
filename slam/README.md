@@ -4,7 +4,9 @@ Authors: Aakin Desai and Nithin Gunamgari
 
 ## Package Summary
 
-This incorporates EKF SLAM on the Turtlebot3.
+This incorporates different slam techniques on turtlebot3.
+
+* EKF slam from scratch * RTABMAP with 2D LiDAR scanner * Frontier Exploration with 2D LiDAR scanner.
 
 ### EKF SLAM
 
