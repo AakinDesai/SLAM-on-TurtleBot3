@@ -4,7 +4,13 @@ Authors: Aakin Desai and Nithin Gunamgari
 
 ## Package Summary
 
-This incorporates EKF SLAM on the Turtlebot3.
+This incorporates different slam techniques on turtlebot3.
+
+* EKF slam from scratch
+
+* RTABMAP with 2D LiDAR scanner
+
+* Frontier Exploration with 2D LiDAR scanner.
 
 ### EKF SLAM
 
@@ -64,3 +70,29 @@ Green block - Odometry with black path
 Red block - EKF Slam with green path
 
 Robot - Turtlebot3 gazebo path in red
+
+To run this, clone this repository (make sure you have all the turtlebot dependecies installed). 
+
+Launch the following files in order
+
+- `roslaunch turtlebot3_gazebo turtlebot3_world.launch`
+
+- `roslaunch slam slam.launch`
+
+### RTABMAP 
+
+RTAB-Map is a RGB-D SLAM approach with real-time constraints.
+
+RTAB-Map (Real-Time Appearance-Based Mapping) is a RGB-D Graph SLAM approach based on a global Bayesian loop closure detector.
+
+However, we did not have an RGB-D camera to implement RTAB-Map completely. We simplified the system to a 2D-LiDAR by turning off nodes related to loop closure.
+
+To use RTAB-Map, go to this [resource](http://wiki.ros.org/rtabmap) to install the package and [here](http://wiki.ros.org/rtabmap_ros) to know how to use it.
+
+To run this, clone this repository (make sure you have all the turtlebot dependecies installed). 
+
+Launch the following files in order
+
+- `roslaunch turtlebot3_gazebo turtlebot3_world.launch`
+
+- `roslaunch slam slam.launch`
