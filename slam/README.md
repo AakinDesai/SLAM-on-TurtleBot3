@@ -112,3 +112,25 @@ the above figure shows the resulted 2D map from RTAB-Map.
 the above  figure shows the resulted 3D map from RTAB-Map.
 
 For the real world results check this [out](https://github.com/AakinDesai/ME-499/tree/master/slam/include/maps) to see the maps produced using a turtlebot3.
+
+## FRONTIER EXPLORATION
+
+The central question in exploration is: Given what you
+know about the world, where should you move to gain as
+much new information as possible?
+
+Frontiers are regions on the boundary between open
+space and unexplored space. When a robot moves to a
+frontier, it can see into unexplored space and add the new
+information to its map.
+
+To know more about frontier exploration, check this [resource](http://www.robotfrontier.com/papers/cira97.pdf).
+
+Launch the following files in order
+
+- `roslaunch turtlebot3_gazebo turtlebot3_world.launch`
+
+- `roslaunch slam slam.launch`
+
+<img src="media/Frontier_exploration.png" width="400">
+
