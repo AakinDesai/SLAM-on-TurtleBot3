@@ -98,7 +98,10 @@ Launch the following files in order
 
 - `roslaunch turtlebot3_gazebo turtlebot3_world.launch`
 
-- `roslaunch slam slam.launch`
+- `roslaunch slam mapping.launch` (For simulation with RGB-D camera)
+
+- `roslaunch slam turtlebot3_slam.launch slam_methods=rtabmap` (For robot without RGB-D camera)
+
 
 
 After performing the RTAB-Map in gazebo using a customized world, the following are the results.
@@ -130,7 +133,7 @@ Launch the following files in order
 
 - `roslaunch turtlebot3_gazebo turtlebot3_world.launch`
 
-- `roslaunch slam slam.launch`
+- `roslaunch slam turtlebot3_slam.launch slam_methods=frontier_exploration`
 
 <img src="media/Frontier_exploration.png" width="400">
 
