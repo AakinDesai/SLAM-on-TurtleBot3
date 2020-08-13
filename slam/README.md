@@ -63,9 +63,9 @@ Update the error covariance
 Loop over the above updates for every time step.
 
 EKF Slam with Gazebo landmarks
-![gzbslam](./media/path.png =400x400)
 
-<img src="media/path.png" width="200">
+
+<img src="media/path.png" width="400">
 
 Green block - Odometry with black path
 
@@ -98,3 +98,16 @@ Launch the following files in order
 - `roslaunch turtlebot3_gazebo turtlebot3_world.launch`
 
 - `roslaunch slam slam.launch`
+
+
+After performing the RTAB-Map in gazebo using a customized world, the following are the results.
+
+<img src="media/Rtabmap 2D.png" width="400">
+
+the above figure shows the resulted 2D map from RTAB-Map.
+
+<img src="media/3D map.png" width="400">
+
+the above  figure shows the resulted 3D map from RTAB-Map.
+
+For the real world results check this [out](https://github.com/AakinDesai/ME-499/tree/master/slam/include/maps) to see the maps produced using a turtlebot3.
