@@ -65,6 +65,8 @@ Loop over the above updates for every time step.
 EKF Slam with Gazebo landmarks
 ![gzbslam](./media/path.png =400x400)
 
+<img src="media/path.png" width="200">
+
 Green block - Odometry with black path
 
 Red block - EKF Slam with green path
