@@ -63,7 +63,7 @@ Update the error covariance
 Loop over the above updates for every time step.
 
 EKF Slam with Gazebo landmarks
-![gzbslam](media/path.png)
+![gzbslam](media/path.png =400x)
 
 Green block - Odometry with black path
 
