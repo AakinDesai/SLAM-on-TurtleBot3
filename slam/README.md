@@ -12,7 +12,7 @@ This incorporates different slam techniques on turtlebot3.
 
 * Frontier Exploration with 2D LiDAR scanner.
 
-### EKF SLAM
+## EKF SLAM
 
 For EKF SLAM, refer to [this SLAM resource](https://ieeexplore.ieee.org/document/938381) and [this EKF resource](https://www.cs.unc.edu/~welch/media/pdf/kalman_intro.pdf) for the details on notation.
 
@@ -81,7 +81,8 @@ Launch the following files in order
 
 - `roslaunch slam slam.launch`
 
-### RTABMAP 
+
+## RTABMAP 
 
 RTAB-Map is a RGB-D SLAM approach with real-time constraints.
 
