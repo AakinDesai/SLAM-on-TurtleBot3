@@ -137,3 +137,10 @@ Launch the following files in order
 
 <img src="media/Frontier_exploration.png" width="400">
 
+## Autonomous Navigation
+
+Launch the following files in order
+
+- `roslaunch turtlebot3_gazebo turtlebot3_world.launch`(In Simulation for purpose of verification )
+
+- `roslaunch slam turtlebot3_navigation.launch map_file:=$HOME/map.yaml 
